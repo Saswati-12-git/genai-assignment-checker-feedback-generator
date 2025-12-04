@@ -1,7 +1,6 @@
 import os
 import json
 import streamlit as st
-from dotenv import load_dotenv
 from groq import Groq
 from PyPDF2 import PdfReader
 from docx import Document
@@ -10,16 +9,16 @@ import re
 import base64
 
 # ==============================
-# 1. Load API Key
+# 1. Load API Key from Streamlit Secrets
 # ==============================
-load_dotenv()
-api_key = os.getenv("GROQ_API_KEY")
+api_key = st.secrets["groq"]["api_key"]
 
 if not api_key:
-    st.error("⚠️ GROQ_API_KEY not found. Create .env file and add:\nGROQ_API_KEY=your_key_here")
+    st.error("⚠️ GROQ API key not found in Streamlit secrets!")
     st.stop()
 
 client = Groq(api_key=api_key)
+
 
 # ==============================
 # 2. Extract text helpers
@@ -176,3 +175,4 @@ if st.button("🚀 Run Evaluation"):
             st.error("⚠️ High plagiarism detected!")
         else:
             st.success("✅ Mostly original content!")
+
